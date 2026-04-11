@@ -25,9 +25,29 @@ cp ~/.tmux.conf ~/.tmux.conf.backup.$(date +%Y%m%d%H%M%S)
 
 按照下方「配置清单」，逐项检查 `~/.tmux.conf` 中是否已存在。
 
-### 冲突处理规则
+### 匹配与冲突处理规则
 
-遇到已存在相同功能的配置项时：
+逐项检查 `~/.tmux.conf`，按以下优先级处理：
+
+#### 规则 1：已存在相同配置 → 跳过（不修改）
+
+如果目标文件中**已存在完全相同的指令**（指令部分一致，忽略行末注释），则**跳过该项，不做任何修改**。
+
+判断方法：提取行内 tmux 指令部分（去掉 `# ...` 注释后），与清单中的指令比较。
+
+```tmux
+# 已存在以下行（无论注释内容是什么）：
+set -g prefix C-a     # [AI_INSTALL] prefix 改为 Ctrl+a
+
+# 清单项也是：
+set -g prefix C-a     # [AI_INSTALL] prefix 改为 Ctrl+a
+
+# → 指令部分一致，跳过，不写入
+```
+
+#### 规则 2：已存在但内容不同 → 注释旧项，写入新项
+
+如果目标文件中存在**功能相同但指令不同**的配置（包括无 `[AI_INSTALL]` 标记的旧项），按以下步骤处理：
 
 1. **保留旧项，注释掉**，在注释行末尾添加备注 `# [AI] 被 AI_INSTALL 替换于 YYYY-MM-DD`
 2. **在旧项下方写入新项**，并在新项行末尾添加 `# [AI_INSTALL]`
@@ -39,7 +59,11 @@ cp ~/.tmux.conf ~/.tmux.conf.backup.$(date +%Y%m%d%H%M%S)
 set -g prefix C-a    # [AI_INSTALL]
 ```
 
-对于**功能相同但写法不同**的项（如 `bind | split-window -h` vs `bind | split-window -h -c "#{pane_current_path}"`），也视为冲突，按上述规则处理。
+对于**功能相同但写法不同**的项（如 `bind | split-window -h` vs `bind | split-window -h -c "#{pane_current_path}"`），也视为冲突，按规则 2 处理。
+
+#### 规则 3：不存在 → 直接写入
+
+目标文件中无任何相关配置时，直接写入新项，行末添加 `# [AI_INSTALL]`。
 
 ---
 
@@ -59,7 +83,31 @@ set -g base-index 1   # [AI_INSTALL] window 编号从 1 开始
 setw -g pane-base-index 1  # [AI_INSTALL] pane 编号从 1 开始
 ```
 
-### 2.2 高频快捷键
+### 2.2 Pane 边框
+
+```tmux
+# --- Pane 边框 ---
+set -g pane-border-lines single                   # [AI_INSTALL] 边框线型（single）
+set -g pane-border-status top                     # [AI_INSTALL] 在边框顶部显示状态栏
+```
+
+**AI 执行时须询问用户**选择边框标题显示内容，根据选择写入对应的 `pane-border-format`：
+
+| 选项 | 格式 | 效果示例 |
+|---|---|---|
+| 编号 (index) | `' #P '` | ` 1 ` |
+| 编号 + 标题 | `' #P: #T '` | ` 1: zsh ` |
+| 编号 + 当前命令 | `' #P: #{pane_current_command} '` | ` 1: vim ` |
+| 编号 + 标题 + 当前命令 | `' #P: #T [#{pane_current_command}] '` | ` 1: zsh [vim] ` |
+
+默认推荐：**编号 (index)**。
+
+```tmux
+# 默认（编号）：
+set -g pane-border-format ' #P '                  # [AI_INSTALL] 边框状态栏格式
+```
+
+### 2.3 高频快捷键
 
 ```tmux
 # --- 高频快捷键 ---
@@ -85,7 +133,7 @@ bind k select-pane -U      # [AI_INSTALL] 切换到上方 pane
 bind l select-pane -R      # [AI_INSTALL] 切换到右侧 pane
 ```
 
-### 2.3 实用工具快捷键
+### 2.4 实用工具快捷键
 
 ```tmux
 # --- 实用工具 ---
