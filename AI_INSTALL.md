@@ -140,6 +140,157 @@ bind l select-pane -R      # [AI_INSTALL] 切换到右侧 pane
 bind r source-file ~/.tmux.conf \; display "配置已重载"  # [AI_INSTALL] 重载配置
 ```
 
+### 2.5 状态栏配色
+
+**AI 执行时须询问用户**选择配色方案，从下方 5 种预设中选择一种，或提供自定义色值。默认推荐：**Catppuccin Mocha**。
+
+#### 颜色变量定义
+
+以下变量在配色模板中引用，AI 根据用户选择的方案将具体 hex 色值填入模板。
+
+| 变量名 | 用途说明 |
+|---|---|
+| `@c_status_bg` | 状态栏整体背景 |
+| `@c_status_fg` | 状态栏整体前景（文字） |
+| `@c_left_bg` | 左侧状态栏背景 |
+| `@c_left_fg` | 左侧状态栏前景 |
+| `@c_right_bg` | 右侧状态栏背景 |
+| `@c_right_fg` | 右侧状态栏前景 |
+| `@c_win_bg` | 非当前窗口标签背景 |
+| `@c_win_fg` | 非当前窗口标签前景 |
+| `@c_curwin_bg` | 当前窗口标签背景 |
+| `@c_curwin_fg` | 当前窗口标签前景 |
+| `@c_border` | 非活动窗格边框前景 |
+| `@c_active_border` | 活动窗格边框前景 |
+| `@c_msg_bg` | 消息提示背景 |
+| `@c_msg_fg` | 消息提示前景 |
+| `@c_mode_bg` | 选择/复制模式背景 |
+| `@c_mode_fg` | 选择/复制模式前景 |
+
+#### 预设配色方案
+
+**方案 A：Catppuccin Mocha**（柔和马卡龙风）
+
+| 变量 | 色值 | 色名 |
+|---|---|---|
+| `@c_status_bg` | `#1e1e2e` | Base |
+| `@c_status_fg` | `#cdd6f4` | Text |
+| `@c_left_bg` | `#b4befe` | Lavender |
+| `@c_left_fg` | `#1e1e2e` | Base |
+| `@c_right_bg` | `#a6e3a1` | Green |
+| `@c_right_fg` | `#1e1e2e` | Base |
+| `@c_win_bg` | `#313244` | Surface0 |
+| `@c_win_fg` | `#cdd6f4` | Text |
+| `@c_curwin_bg` | `#cba6f7` | Mauve |
+| `@c_curwin_fg` | `#1e1e2e` | Base |
+| `@c_border` | `#89dceb` | Teal |
+| `@c_active_border` | `#b4befe` | Lavender |
+| `@c_msg_bg` | `#b4befe` | Lavender |
+| `@c_msg_fg` | `#1e1e2e` | Base |
+| `@c_mode_bg` | `#45475a` | Surface1 |
+| `@c_mode_fg` | `#cdd6f4` | Text |
+
+**方案 B：Dracula**（暗夜吸血鬼风）
+
+| 变量 | 色值 | 色名 |
+|---|---|---|
+| `@c_status_bg` | `#282a36` | Background |
+| `@c_status_fg` | `#f8f8f2` | Foreground |
+| `@c_left_bg` | `#bd93f9` | Purple |
+| `@c_left_fg` | `#282a36` | Background |
+| `@c_right_bg` | `#50fa7b` | Green |
+| `@c_right_fg` | `#282a36` | Background |
+| `@c_win_bg` | `#44475a` | CurrentLine |
+| `@c_win_fg` | `#f8f8f2` | Foreground |
+| `@c_curwin_bg` | `#ff79c6` | Pink |
+| `@c_curwin_fg` | `#282a36` | Background |
+| `@c_border` | `#8be9fd` | Cyan |
+| `@c_active_border` | `#bd93f9` | Purple |
+| `@c_msg_bg` | `#bd93f9` | Purple |
+| `@c_msg_fg` | `#f8f8f2` | Foreground |
+| `@c_mode_bg` | `#44475a` | CurrentLine |
+| `@c_mode_fg` | `#f8f8f2` | Foreground |
+
+**方案 C：Tokyo Night**（东京夜色风）
+
+| 变量 | 色值 | 色名 |
+|---|---|---|
+| `@c_status_bg` | `#1a1b26` | bg |
+| `@c_status_fg` | `#c0caf5` | fg |
+| `@c_left_bg` | `#7aa2f7` | Blue |
+| `@c_left_fg` | `#1a1b26` | bg |
+| `@c_right_bg` | `#9ece6a` | Green |
+| `@c_right_fg` | `#1a1b26` | bg |
+| `@c_win_bg` | `#292e42` | bg_highlight |
+| `@c_win_fg` | `#c0caf5` | fg |
+| `@c_curwin_bg` | `#bb9af7` | Magenta |
+| `@c_curwin_fg` | `#1a1b26` | bg |
+| `@c_border` | `#7dcfff` | Cyan |
+| `@c_active_border` | `#7aa2f7` | Blue |
+| `@c_msg_bg` | `#7aa2f7` | Blue |
+| `@c_msg_fg` | `#1a1b26` | bg |
+| `@c_mode_bg` | `#292e42` | bg_highlight |
+| `@c_mode_fg` | `#c0caf5` | fg |
+
+**方案 D：Gruvbox Dark**（复古暖色风）
+
+| 变量 | 色值 | 色名 |
+|---|---|---|
+| `@c_status_bg` | `#282828` | bg |
+| `@c_status_fg` | `#ebdbb2` | fg |
+| `@c_left_bg` | `#fe8019` | Orange |
+| `@c_left_fg` | `#282828` | bg |
+| `@c_right_bg` | `#b8bb26` | Green |
+| `@c_right_fg` | `#282828` | bg |
+| `@c_win_bg` | `#3c3836` | bg1 |
+| `@c_win_fg` | `#ebdbb2` | fg |
+| `@c_curwin_bg` | `#fabd2f` | Yellow |
+| `@c_curwin_fg` | `#282828` | bg |
+| `@c_border` | `#8ec07c` | Aqua |
+| `@c_active_border` | `#fe8019` | Orange |
+| `@c_msg_bg` | `#fe8019` | Orange |
+| `@c_msg_fg` | `#282828` | bg |
+| `@c_mode_bg` | `#504945` | bg2 |
+| `@c_mode_fg` | `#ebdbb2` | fg |
+
+**方案 E：Nord**（北极冰蓝风）
+
+| 变量 | 色值 | 色名 |
+|---|---|---|
+| `@c_status_bg` | `#2e3440` | Polar Night |
+| `@c_status_fg` | `#d8dee9` | Snow Storm |
+| `@c_left_bg` | `#81a1c1` | Frost |
+| `@c_left_fg` | `#2e3440` | Polar Night |
+| `@c_right_bg` | `#a3be8c` | Aurora Green |
+| `@c_right_fg` | `#2e3440` | Polar Night |
+| `@c_win_bg` | `#3b4252` | Polar Night + |
+| `@c_win_fg` | `#d8dee9` | Snow Storm |
+| `@c_curwin_bg` | `#5e81ac` | Frost Dark |
+| `@c_curwin_fg` | `#eceff4` | Snow Storm + |
+| `@c_border` | `#88c0d0` | Frost Light |
+| `@c_active_border` | `#81a1c1` | Frost |
+| `@c_msg_bg` | `#81a1c1` | Frost |
+| `@c_msg_fg` | `#2e3440` | Polar Night |
+| `@c_mode_bg` | `#3b4252` | Polar Night + |
+| `@c_mode_fg` | `#d8dee9` | Snow Storm |
+
+#### 配置模板
+
+AI 根据用户选择的方案，将上表中的色值替换下方模板中的 `#XXXXXX` 占位符后写入 `~/.tmux.conf`。
+
+```tmux
+# --- 状态栏配色（{用户选择的方案名称}） ---
+set -g status-style "bg=#XXXXXX,fg=#XXXXXX"                        # [AI_INSTALL] 状态栏整体
+set -g status-left-style "bg=#XXXXXX,fg=#XXXXXX"                   # [AI_INSTALL] 左侧状态栏
+set -g status-right-style "bg=#XXXXXX,fg=#XXXXXX"                  # [AI_INSTALL] 右侧状态栏
+setw -g window-status-style "bg=#XXXXXX,fg=#XXXXXX"                # [AI_INSTALL] 非当前窗口
+setw -g window-status-current-style "bg=#XXXXXX,fg=#XXXXXX"        # [AI_INSTALL] 当前窗口
+set -g pane-border-style "fg=#XXXXXX"                               # [AI_INSTALL] 非活动窗格边框
+set -g pane-active-border-style "fg=#XXXXXX"                        # [AI_INSTALL] 活动窗格边框
+set -g message-style "bg=#XXXXXX,fg=#XXXXXX"                       # [AI_INSTALL] 消息提示
+setw -g mode-style "bg=#XXXXXX,fg=#XXXXXX"                         # [AI_INSTALL] 选择/复制模式
+```
+
 ---
 
 ## Step 3：验证
