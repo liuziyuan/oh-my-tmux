@@ -293,7 +293,51 @@ setw -g mode-style "bg=#XXXXXX,fg=#XXXXXX"                         # [AI_INSTALL
 
 ---
 
-## Step 3：验证
+## Step 3：终端适配（可选）
+
+### 3.1 Ghostty 鼠标兼容
+
+**检测方法**（任意一条满足即视为使用 Ghostty）：
+
+```bash
+# 方法 1：检测当前终端程序
+echo $TERM_PROGRAM   # 输出为 "ghostty" 则命中
+
+# 方法 2：检测配置文件是否存在
+ls ~/.config/ghostty/config 2>/dev/null && echo "Ghostty 配置存在"
+```
+
+**检测到 Ghostty 时，须向用户展示以下说明并询问是否执行**：
+
+> 检测到你正在使用 **Ghostty** 终端。  
+> Ghostty 默认会拦截第一次鼠标点击，导致 tmux 鼠标单击无法切换 pane，需要双击才有效。  
+> 建议在 `~/.config/ghostty/config` 中加入：
+> ```
+> focus-follows-mouse = true
+> ```
+> 是否现在自动写入？（需重启 Ghostty 后生效）
+
+**用户确认后执行**：
+
+1. 检查 `~/.config/ghostty/config` 是否已含 `focus-follows-mouse`：
+   - **已存在** → 提示"已有该配置，跳过"，不修改
+   - **不存在** → 追加以下内容：
+
+```bash
+cat >> ~/.config/ghostty/config << 'EOF'
+
+# 允许鼠标事件透传给终端应用（tmux），避免第一次点击被 Ghostty 拦截
+focus-follows-mouse = true
+EOF
+```
+
+2. 提示用户：**需重启 Ghostty 后生效**（Ghostty 不支持热重载配置）。
+
+**用户拒绝**：跳过，不做任何修改。
+
+---
+
+## Step 4：验证
 
 配置写入完成后，执行以下验证：
 
