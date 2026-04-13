@@ -133,14 +133,7 @@ bind k select-pane -U      # [AI_INSTALL] 切换到上方 pane
 bind l select-pane -R      # [AI_INSTALL] 切换到右侧 pane
 ```
 
-### 2.4 实用工具快捷键
-
-```tmux
-# --- 实用工具 ---
-bind r source-file ~/.tmux.conf \; display "配置已重载"  # [AI_INSTALL] 重载配置
-```
-
-### 2.5 状态栏配色
+### 2.4 状态栏配色
 
 **AI 执行时须询问用户**选择配色方案，从下方 5 种预设中选择一种，或提供自定义色值。默认推荐：**Catppuccin Mocha**。
 
@@ -346,7 +339,7 @@ EOF
 tmux source ~/.tmux.conf 2>&1 && echo "配置加载成功" || echo "配置加载失败"
 
 # 验证快捷键绑定
-tmux list-keys | grep -E "bind.*(split-window|kill-pane|select-pane|new-window|next-window|previous-window|detach-client|source-file)"
+tmux list-keys | grep -E "bind.*(split-window|kill-pane|select-pane|new-window|next-window|previous-window|detach-client)"
 ```
 
 ---

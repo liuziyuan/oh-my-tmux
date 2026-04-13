@@ -40,7 +40,6 @@ Prefix 为 `Ctrl+a`（按下后松开，再按对应键）。
 | `prefix -` | 上下分屏 |
 | `prefix x` | 关闭当前 pane |
 | `prefix h/j/k/l` | 切换 pane（vim 风格） |
-| `prefix r` | 重载配置 |
 
 ### Pane 边框
 
