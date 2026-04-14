@@ -37,33 +37,33 @@ cp ~/.tmux.conf ~/.tmux.conf.backup.$(date +%Y%m%d%H%M%S)
 
 ```tmux
 # 已存在以下行（无论注释内容是什么）：
-set -g prefix C-a     # [AI_INSTALL] prefix 改为 Ctrl+a
+set -g prefix C-a     # [oh-my-tmux] prefix 改为 Ctrl+a
 
 # 清单项也是：
-set -g prefix C-a     # [AI_INSTALL] prefix 改为 Ctrl+a
+set -g prefix C-a     # [oh-my-tmux] prefix 改为 Ctrl+a
 
 # → 指令部分一致，跳过，不写入
 ```
 
 #### 规则 2：已存在但内容不同 → 注释旧项，写入新项
 
-如果目标文件中存在**功能相同但指令不同**的配置（包括无 `[AI_INSTALL]` 标记的旧项），按以下步骤处理：
+如果目标文件中存在**功能相同但指令不同**的配置（包括无 `[oh-my-tmux]` 标记的旧项），按以下步骤处理：
 
 1. **保留旧项，注释掉**，在注释行末尾添加备注 `# [AI] 被 AI_INSTALL 替换于 YYYY-MM-DD`
-2. **在旧项下方写入新项**，并在新项行末尾添加 `# [AI_INSTALL]`
+2. **在旧项下方写入新项**，并在新项行末尾添加 `# [oh-my-tmux]`
 
 示例：
 
 ```tmux
 # set -g prefix C-b  # [AI] 被 AI_INSTALL 替换于 2026-04-11
-set -g prefix C-a    # [AI_INSTALL]
+set -g prefix C-a    # [oh-my-tmux]
 ```
 
 对于**功能相同但写法不同**的项（如 `bind | split-window -h` vs `bind | split-window -h -c "#{pane_current_path}"`），也视为冲突，按规则 2 处理。
 
 #### 规则 3：不存在 → 直接写入
 
-目标文件中无任何相关配置时，直接写入新项，行末添加 `# [AI_INSTALL]`。
+目标文件中无任何相关配置时，直接写入新项，行末添加 `# [oh-my-tmux]`。
 
 ---
 
@@ -74,21 +74,21 @@ set -g prefix C-a    # [AI_INSTALL]
 ```tmux
 # --- 基础设置 ---
 
-set -g prefix C-a     # [AI_INSTALL] prefix 改为 Ctrl+a
-unbind C-b            # [AI_INSTALL] 解绑默认 prefix
+set -g prefix C-a     # [oh-my-tmux] prefix 改为 Ctrl+a
+unbind C-b            # [oh-my-tmux] 解绑默认 prefix
 
-set -g mouse on       # [AI_INSTALL] 开启鼠标支持
+set -g mouse on       # [oh-my-tmux] 开启鼠标支持
 
-set -g base-index 1   # [AI_INSTALL] window 编号从 1 开始
-setw -g pane-base-index 1  # [AI_INSTALL] pane 编号从 1 开始
+set -g base-index 1   # [oh-my-tmux] window 编号从 1 开始
+setw -g pane-base-index 1  # [oh-my-tmux] pane 编号从 1 开始
 ```
 
 ### 2.2 Pane 边框
 
 ```tmux
 # --- Pane 边框 ---
-set -g pane-border-lines single                   # [AI_INSTALL] 边框线型（single）
-set -g pane-border-status top                     # [AI_INSTALL] 在边框顶部显示状态栏
+set -g pane-border-lines single                   # [oh-my-tmux] 边框线型（single）
+set -g pane-border-status top                     # [oh-my-tmux] 在边框顶部显示状态栏
 ```
 
 **AI 执行时须询问用户**选择边框标题显示内容，根据选择写入对应的 `pane-border-format`：
@@ -104,7 +104,7 @@ set -g pane-border-status top                     # [AI_INSTALL] 在边框顶部
 
 ```tmux
 # 默认（编号）：
-set -g pane-border-format ' #P '                  # [AI_INSTALL] 边框状态栏格式
+set -g pane-border-format ' #P #{pane_title} '    # [oh-my-tmux] 边框状态栏格式（颜色继承 pane-border-style）
 ```
 
 ### 2.3 高频快捷键
@@ -113,24 +113,24 @@ set -g pane-border-format ' #P '                  # [AI_INSTALL] 边框状态栏
 # --- 高频快捷键 ---
 
 # Window 管理
-bind c new-window          # [AI_INSTALL] 创建新 window
-bind n next-window         # [AI_INSTALL] 下一个 window
-bind p previous-window     # [AI_INSTALL] 上一个 window
-bind d detach-client        # [AI_INSTALL] detach 当前 session
-bind X kill-window          # [AI_INSTALL] 关闭当前 window
+bind c new-window          # [oh-my-tmux] 创建新 window
+bind n next-window         # [oh-my-tmux] 下一个 window
+bind p previous-window     # [oh-my-tmux] 上一个 window
+bind d detach-client        # [oh-my-tmux] detach 当前 session
+bind X kill-window          # [oh-my-tmux] 关闭当前 window
 
 # 分屏
-bind | split-window -h     # [AI_INSTALL] 左右分屏
-bind - split-window -v     # [AI_INSTALL] 上下分屏
+bind | split-window -h     # [oh-my-tmux] 左右分屏
+bind - split-window -v     # [oh-my-tmux] 上下分屏
 
 # Pane 操作
-bind x kill-pane           # [AI_INSTALL] 关闭当前 pane
+bind x kill-pane           # [oh-my-tmux] 关闭当前 pane
 
 # Pane 切换（vim 风格）
-bind h select-pane -L      # [AI_INSTALL] 切换到左侧 pane
-bind j select-pane -D      # [AI_INSTALL] 切换到下方 pane
-bind k select-pane -U      # [AI_INSTALL] 切换到上方 pane
-bind l select-pane -R      # [AI_INSTALL] 切换到右侧 pane
+bind h select-pane -L      # [oh-my-tmux] 切换到左侧 pane
+bind j select-pane -D      # [oh-my-tmux] 切换到下方 pane
+bind k select-pane -U      # [oh-my-tmux] 切换到上方 pane
+bind l select-pane -R      # [oh-my-tmux] 切换到右侧 pane
 ```
 
 ### 2.4 状态栏配色
@@ -176,7 +176,7 @@ bind l select-pane -R      # [AI_INSTALL] 切换到右侧 pane
 | `@c_win_fg` | `#cdd6f4` | Text |
 | `@c_curwin_bg` | `#cba6f7` | Mauve |
 | `@c_curwin_fg` | `#1e1e2e` | Base |
-| `@c_border` | `#89dceb` | Teal |
+| `@c_border` | `#585b70` | Surface2 |
 | `@c_active_border` | `#b4befe` | Lavender |
 | `@c_msg_bg` | `#b4befe` | Lavender |
 | `@c_msg_fg` | `#1e1e2e` | Base |
@@ -273,15 +273,15 @@ AI 根据用户选择的方案，将上表中的色值替换下方模板中的 `
 
 ```tmux
 # --- 状态栏配色（{用户选择的方案名称}） ---
-set -g status-style "bg=#XXXXXX,fg=#XXXXXX"                        # [AI_INSTALL] 状态栏整体
-set -g status-left-style "bg=#XXXXXX,fg=#XXXXXX"                   # [AI_INSTALL] 左侧状态栏
-set -g status-right-style "bg=#XXXXXX,fg=#XXXXXX"                  # [AI_INSTALL] 右侧状态栏
-setw -g window-status-style "bg=#XXXXXX,fg=#XXXXXX"                # [AI_INSTALL] 非当前窗口
-setw -g window-status-current-style "bg=#XXXXXX,fg=#XXXXXX"        # [AI_INSTALL] 当前窗口
-set -g pane-border-style "fg=#XXXXXX"                               # [AI_INSTALL] 非活动窗格边框
-set -g pane-active-border-style "fg=#XXXXXX"                        # [AI_INSTALL] 活动窗格边框
-set -g message-style "bg=#XXXXXX,fg=#XXXXXX"                       # [AI_INSTALL] 消息提示
-setw -g mode-style "bg=#XXXXXX,fg=#XXXXXX"                         # [AI_INSTALL] 选择/复制模式
+set -g status-style "bg=#XXXXXX,fg=#XXXXXX"                        # [oh-my-tmux] 状态栏整体
+set -g status-left-style "bg=#XXXXXX,fg=#XXXXXX"                   # [oh-my-tmux] 左侧状态栏
+set -g status-right-style "bg=#XXXXXX,fg=#XXXXXX"                  # [oh-my-tmux] 右侧状态栏
+setw -g window-status-style "bg=#XXXXXX,fg=#XXXXXX"                # [oh-my-tmux] 非当前窗口
+setw -g window-status-current-style "bg=#XXXXXX,fg=#XXXXXX"        # [oh-my-tmux] 当前窗口
+set -g pane-border-style "fg=#XXXXXX"                               # [oh-my-tmux] 非活动窗格边框
+set -g pane-active-border-style "fg=#XXXXXX"                        # [oh-my-tmux] 活动窗格边框
+set -g message-style "bg=#XXXXXX,fg=#XXXXXX"                       # [oh-my-tmux] 消息提示
+setw -g mode-style "bg=#XXXXXX,fg=#XXXXXX"                         # [oh-my-tmux] 选择/复制模式
 ```
 
 ---
