@@ -286,9 +286,88 @@ setw -g mode-style "bg=#XXXXXX,fg=#XXXXXX"                         # [oh-my-tmux
 
 ---
 
-## Step 3：终端适配（可选）
+## Step 3：插件管理（tmux-resurrect + tmux-continuum）
 
-### 3.1 Ghostty 鼠标兼容
+引入会话持久化能力，避免 tmux 进程退出或系统重启后丢失 session/window/pane 布局与工作上下文。
+
+- **tmux-resurrect**：手动保存/恢复 tmux 会话状态
+- **tmux-continuum**：基于 resurrect，提供自动保存（默认 15 分钟）和 tmux 启动时自动恢复
+- **TPM (Tmux Plugin Manager)**：上述两个插件的依赖，统一管理插件生命周期
+
+### 3.1 检测与安装 TPM
+
+```bash
+if [ -d ~/.tmux/plugins/tpm ]; then
+  echo "TPM 已安装，跳过"
+else
+  git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm
+fi
+```
+
+### 3.2 写入插件配置
+
+按 Step 2 的「匹配与冲突处理规则」逐项检查 `~/.tmux.conf`，将下列两类配置分别写入。
+
+#### 类别 A：插件声明与选项
+
+> 以下选项采用社区推荐默认值，AI 直接写入，**无需询问用户**（与 prefix、鼠标支持等非偏好型默认项保持一致风格）。如需个性化，用户后续手动修改即可。
+
+写入位置建议放在 2.4 状态栏配色之后：
+
+```tmux
+# --- 插件管理（TPM）---
+set -g @plugin 'tmux-plugins/tpm'                       # [oh-my-tmux] TPM 本身
+set -g @plugin 'tmux-plugins/tmux-resurrect'            # [oh-my-tmux] 会话保存/恢复
+set -g @plugin 'tmux-plugins/tmux-continuum'            # [oh-my-tmux] 自动保存 + 启动恢复
+
+# --- 插件选项 ---
+set -g @continuum-restore 'on'                          # [oh-my-tmux] tmux 启动时自动恢复上次会话
+set -g @continuum-save-interval '15'                    # [oh-my-tmux] 自动保存间隔（分钟）
+set -g @resurrect-capture-pane-contents 'on'            # [oh-my-tmux] 保存 pane 输出内容
+set -g @resurrect-strategy-vim 'session'                # [oh-my-tmux] 恢复 vim session
+set -g @resurrect-strategy-nvim 'session'               # [oh-my-tmux] 恢复 neovim session
+```
+
+#### 类别 B：TPM 启动行（必须位于 ~/.tmux.conf 末尾）
+
+```tmux
+# --- TPM 启动（必须保持在文件末尾）---
+run '~/.tmux/plugins/tpm/tpm'                           # [oh-my-tmux] 加载所有插件
+```
+
+> **重要**：`run '~/.tmux/plugins/tpm/tpm'` 必须是 `~/.tmux.conf` 的**最后一条非注释指令**。AI 写入时按以下规则处理：
+> - 文件中已有该指令且位于末尾 → 跳过
+> - 文件中已有该指令但不在末尾 → 将其移动到末尾
+> - 文件中无该指令 → 追加到末尾
+
+### 3.3 安装插件
+
+```bash
+# 重新加载 tmux 配置（需先在 tmux 内）
+tmux source ~/.tmux.conf
+
+# 触发 TPM 安装新声明的插件
+~/.tmux/plugins/tpm/bin/install_plugins
+```
+
+> 若用户当前不在 tmux 内，提示其进入 tmux 后按 `prefix + I` 完成安装。
+
+### 3.4 使用提示
+
+向用户说明以下快捷键（默认由 resurrect/continuum 提供，无需在 `~/.tmux.conf` 中再次绑定）：
+
+| 快捷键 | 功能 |
+|---|---|
+| `prefix + Ctrl-s` | 手动保存会话 |
+| `prefix + Ctrl-r` | 手动恢复会话 |
+| `prefix + I` | 安装新声明的插件 |
+| `prefix + U` | 升级已安装插件 |
+
+---
+
+## Step 4：终端适配（可选）
+
+### 4.1 Ghostty 鼠标兼容
 
 **检测方法**（任意一条满足即视为使用 Ghostty）：
 
@@ -330,7 +409,7 @@ EOF
 
 ---
 
-## Step 4：验证
+## Step 5：验证
 
 配置写入完成后，执行以下验证：
 
@@ -340,6 +419,14 @@ tmux source ~/.tmux.conf 2>&1 && echo "配置加载成功" || echo "配置加载
 
 # 验证快捷键绑定
 tmux list-keys | grep -E "bind.*(split-window|kill-pane|select-pane|new-window|next-window|previous-window|detach-client)"
+
+# 检查 TPM 与插件目录
+ls -d ~/.tmux/plugins/tpm 2>/dev/null && echo "TPM 已就位"
+ls -d ~/.tmux/plugins/tmux-resurrect 2>/dev/null && echo "tmux-resurrect 已安装"
+ls -d ~/.tmux/plugins/tmux-continuum 2>/dev/null && echo "tmux-continuum 已安装"
+
+# 检查 continuum 自动保存状态（仅在 tmux 进程内有效）
+tmux show-option -gv @continuum-status 2>/dev/null
 ```
 
 ---

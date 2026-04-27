@@ -18,8 +18,9 @@
 
 1. **备份**：自动备份现有 `~/.tmux.conf`
 2. **写入配置**：基础设置、Pane 边框、快捷键、状态栏配色（AI 会询问偏好）
-3. **终端适配**：自动检测 Ghostty，按需写入兼容配置
-4. **验证**：检查配置语法，列出已绑定的快捷键
+3. **插件管理**：自动安装 TPM 与会话持久化插件（tmux-resurrect / tmux-continuum）
+4. **终端适配**：自动检测 Ghostty，按需写入兼容配置
+5. **验证**：检查配置语法，列出已绑定的快捷键和已安装插件
 
 ---
 
@@ -63,6 +64,17 @@ AI 安装时会询问配色方案，内置 5 种预设：
 | **C. Tokyo Night** | 东京夜色风 |
 | **D. Gruvbox Dark** | 复古暖色风 |
 | **E. Nord** | 北极冰蓝风 |
+
+### 会话持久化
+
+通过 [tmux-resurrect](https://github.com/tmux-plugins/tmux-resurrect) +
+[tmux-continuum](https://github.com/tmux-plugins/tmux-continuum) 实现：
+
+- **自动保存**：每 15 分钟保存一次（含 pane 布局、运行命令、输出内容）
+- **启动恢复**：tmux 启动时自动恢复上次会话
+- **手动控制**：`prefix + Ctrl-s` 保存，`prefix + Ctrl-r` 恢复
+
+首次安装由 AI 自动完成 TPM 与插件下载；后续如手动声明新插件，按 `prefix + I` 安装。
 
 ---
 
