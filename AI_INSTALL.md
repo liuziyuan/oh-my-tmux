@@ -81,6 +81,10 @@ set -g mouse on       # [oh-my-tmux] 开启鼠标支持
 
 set -g base-index 1   # [oh-my-tmux] window 编号从 1 开始
 setw -g pane-base-index 1  # [oh-my-tmux] pane 编号从 1 开始
+
+set -g allow-passthrough on   # [oh-my-tmux] 允许终端转义序列穿透
+set -s extended-keys on       # [oh-my-tmux] 启用扩展键支持
+set -as terminal-features 'xterm*:extkeys'  # [oh-my-tmux] xterm 兼容终端扩展键
 ```
 
 ### 2.2 Pane 边框
